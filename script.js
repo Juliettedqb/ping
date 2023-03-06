@@ -15,27 +15,39 @@ const urls = [
   "https://www.allocine.fr",
 ];
 
-async function getLoadingTimes(urls) {
-  //https://stackoverflow.com/questions/43262121/trying-to-use-fetch-and-pass-in-mode-no-cors
-  const promises = urls.map((url) =>
-    fetch(url, { mode: "no-cors" }).then((response) => {
-      //use of the performance API to measure the loading time of each URL
-      const loadTime = performance.now() - response.headers.get("date");
-      //returns an array of objects containing the URL and its corresponding loading time
-      return { url, loadTime };
-    })
-  );
+// async function getLoadingTimes(urls) {
+//   const promises = urls.map((url) => {
+//     const startTime = performance.now();
+//     return fetch(url, { mode: "no-cors" }).then((response) => {
+//       const loadTime = performance.now() - startTime;
+//       //returns an array of objects containing the URL and its corresponding loading time
+//       return { url, loadTime };
+//     });
+//   });
+
+async function getLoadingTimes(urls){
+
+  const promises = urls.map(async(url) => {
+    const startTime = performance.now();
+    await fetch(url, {mode: "no-cors"});
+    const loadTime = performance.now() - startTime;
+    return { url, loadTime }
+  })
+
+  //console.table(promises)
 
   //Promise.all() : creates a promise that resolves when all the URLs have been loaded
   const results = await Promise.all(promises);
 
-  const arrLoadTime = [];
-  results.forEach(e => arrLoadTime.push(`${e.loadTime} : ${e.url}`))
-  const loadTimeSorted = arrLoadTime.sort()
-  console.log(loadTimeSorted)
-  loadTimeSorted.forEach(e => document.getElementById("list").innerHTML += `${e} <br>`)
-  
-  return results;
-}
+  console.table(results)
 
-getLoadingTimes(urls).then(console.log);
+  const arrLoadTime = [];
+  results.forEach((e) => arrLoadTime.push(`${e.loadTime} ms : ${e.url}`));
+  const loadTimeSorted = arrLoadTime.sort((a,b) => );
+  console.log(loadTimeSorted);
+  loadTimeSorted.forEach(
+    (e) => (document.getElementById("list").innerHTML += `${e} <br>`)
+  );
+
+}
+getLoadingTimes(urls)
