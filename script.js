@@ -10,16 +10,12 @@ async function getLoadingTimes(urls) {
     return { url, loadTime };
   }));
   
-  //Promise.all() : creates a promise that resolves when all the URLs have been loaded
-  const results = await Promise.all(promises);
-  return results;
+    //Promise.all() : creates a promise that resolves when all the URLs have been loaded
+    const results = await Promise.all(promises);
+  
+    results.forEach(e => document.getElementById("list").innerHTML += `le site ${e.url} met ${e.loadTime} à charger <br>`)
+    return results;
 }
 
 getLoadingTimes(urls).then(console.log);
 
-// git init
-// git add README.md
-// git commit -m "first commit"
-// git branch -M main
-// git remote add origin git@github.com:Juliettedqb/ping.git
-// git push -u origin main
